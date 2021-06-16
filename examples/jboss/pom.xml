@@ -81,7 +81,7 @@
           <container>
             <containerId>wildfly10x</containerId>
             <zipUrlInstaller>
-              <url>http://download.jboss.org/wildfly/10.1.0.Final/wildfly-10.1.0.Final.zip</url>
+              <url>https://download.jboss.org/wildfly/10.1.0.Final/wildfly-10.1.0.Final.zip</url>
               <extractDir>${basedir}/cargo-installs</extractDir>
             </zipUrlInstaller>
             <append>false</append>
