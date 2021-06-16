@@ -8,7 +8,7 @@
   </parent>
 
   <artifactId>enunciate-jakartars</artifactId>
-  <name>Enunciate - JAX-RS Model Support</name>
+  <name>Enunciate - JAKARTA-RS Model Support</name>
   <description>Model processing for JAX-RS API.</description>
 
   <dependencies>

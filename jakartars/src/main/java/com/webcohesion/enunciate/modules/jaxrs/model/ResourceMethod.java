@@ -32,6 +32,7 @@ import com.webcohesion.enunciate.javac.javadoc.ReturnDocComment;
 import com.webcohesion.enunciate.javac.javadoc.StaticDocComment;
 import com.webcohesion.enunciate.metadata.rs.ResponseHeader;
 import com.webcohesion.enunciate.metadata.rs.*;
+import com.webcohesion.enunciate.metadata.jakarta.*;
 import com.webcohesion.enunciate.modules.jaxrs.EnunciateJaxrsContext;
 import com.webcohesion.enunciate.modules.jaxrs.model.util.JaxrsUtil;
 import com.webcohesion.enunciate.modules.jaxrs.model.util.RSParamDocComment;
@@ -117,7 +118,7 @@ public class ResourceMethod extends DecoratedExecutableElement implements HasFac
     ResourceEntityParameter entityParameter;
     Set<ResourceParameter> resourceParameters;
     ResourceRepresentationMetadata outputPayload;
-    ResourceMethodSignature signatureOverride = delegate.getAnnotation(ResourceMethodSignature.class);
+    JakartaResourceMethodSignature signatureOverride = delegate.getAnnotation(JakartaResourceMethodSignature.class);
     if (signatureOverride == null) {
       entityParameter = null;
       resourceParameters = new TreeSet<ResourceParameter>();
@@ -562,19 +563,19 @@ public class ResourceMethod extends DecoratedExecutableElement implements HasFac
    * @param signatureOverride The method signature override.
    * @return The output payload (explicit in the signature override.
    */
-  protected ResourceRepresentationMetadata loadOutputPayload(ResourceMethodSignature signatureOverride) {
+  protected ResourceRepresentationMetadata loadOutputPayload(JakartaResourceMethodSignature signatureOverride) {
     DecoratedTypeMirror returnType = (DecoratedTypeMirror) getReturnType();
 
     try {
       Class<?> outputType = signatureOverride.output();
-      if (outputType != ResourceMethodSignature.NONE.class) {
+      if (outputType != JakartaResourceMethodSignature.NONE.class) {
         TypeElement type = env.getElementUtils().getTypeElement(outputType.getName());
         return new ResourceRepresentationMetadata(env.getTypeUtils().getDeclaredType(type), returnType.getDeferredDocComment());
       }
     }
     catch (MirroredTypeException e) {
       DecoratedTypeMirror typeMirror = (DecoratedTypeMirror) TypeMirrorDecorator.decorate(e.getTypeMirror(), this.env);
-      if (typeMirror.isInstanceOf(ResourceMethodSignature.class.getName() + ".NONE")) {
+      if (typeMirror.isInstanceOf(JakartaResourceMethodSignature.class.getName() + ".NONE")) {
         return null;
       }
       return new ResourceRepresentationMetadata(typeMirror, returnType.getDeferredDocComment());
@@ -594,7 +595,7 @@ public class ResourceMethod extends DecoratedExecutableElement implements HasFac
    * @param signatureOverride The signature override.
    * @return The explicit resource parameters.
    */
-  protected Set<ResourceParameter> loadResourceParameters(ResourceMethodSignature signatureOverride) {
+  protected Set<ResourceParameter> loadResourceParameters(JakartaResourceMethodSignature signatureOverride) {
     TreeSet<ResourceParameter> params = new TreeSet<ResourceParameter>();
     for (CookieParam cookieParam : signatureOverride.cookieParams()) {
       params.add(new ExplicitResourceParameter(this, new RSParamDocComment(this, cookieParam.value()), cookieParam.value(), ResourceParameterType.COOKIE, context));
@@ -624,10 +625,10 @@ public class ResourceMethod extends DecoratedExecutableElement implements HasFac
    * @param signatureOverride The signature override.
    * @return The resource entity parameter.
    */
-  protected ResourceEntityParameter loadEntityParameter(ResourceMethodSignature signatureOverride) {
+  protected ResourceEntityParameter loadEntityParameter(JakartaResourceMethodSignature signatureOverride) {
     try {
       Class<?> entityType = signatureOverride.input();
-      if (entityType != ResourceMethodSignature.NONE.class) {
+      if (entityType != JakartaResourceMethodSignature.NONE.class) {
         TypeElement type = env.getElementUtils().getTypeElement(entityType.getName());
         return new ResourceEntityParameter(type, env.getTypeUtils().getDeclaredType(type), this.context.getContext().getProcessingEnvironment());
       }
@@ -635,7 +636,7 @@ public class ResourceMethod extends DecoratedExecutableElement implements HasFac
     catch (MirroredTypeException e) {
       DecoratedTypeMirror typeMirror = (DecoratedTypeMirror) TypeMirrorDecorator.decorate(e.getTypeMirror(), this.context.getContext().getProcessingEnvironment());
       if (typeMirror.isDeclared()) {
-        if (typeMirror.isInstanceOf(ResourceMethodSignature.class.getName() + ".NONE")) {
+        if (typeMirror.isInstanceOf(JakartaResourceMethodSignature.class.getName() + ".NONE")) {
           return null;
         }
         else {
