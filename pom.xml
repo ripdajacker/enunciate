@@ -40,6 +40,7 @@
     <module>jackson</module>
     <module>jackson1</module>
     <module>jaxrs</module>
+    <module>jakartars</module>
     <module>jaxws</module>
     <module>spring-web</module>
 
